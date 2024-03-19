@@ -1,7 +1,13 @@
 from configparser import ConfigParser
 
 
-def get_config(filename, section):
+def get_config(filename: str, section: str) -> dict:
+    """
+    Получает конфигурационные данные из файла config.ini
+    :param filename: str
+    :param section: str
+    :return: dict
+    """
     parser = ConfigParser()
     parser.read(filename)
     data = {}
@@ -11,14 +17,24 @@ def get_config(filename, section):
     return data
 
 
-def get_data_for_employers(data):
+def get_data_for_employers(data: dict) -> tuple:
+    """
+    Получает данные из словаря и преобразовывает их в кортеж данных для заполнения таблицы employers
+    :param data: dict
+    :return: tuple
+    """
     vacancy_id = int(data['id'])
     employer_id = int(data['employer']['id'])
     employer_name = data['employer']['name']
     return vacancy_id, employer_id, employer_name
 
 
-def get_data_for_vacancies(data):
+def get_data_for_vacancies(data: dict) -> tuple:
+    """
+    Получает данные из словаря и преобразовывает их в кортеж данных для заполнения таблицы vacancies
+    :param data: dict
+    :return: tuple
+    """
     vacancy_id = int(data['id'])
     vacancy_name = data['name']
     city_name = data['area']['name']
@@ -33,7 +49,12 @@ def get_data_for_vacancies(data):
             responsibility)
 
 
-def get_table_rows(cur):
+def get_table_rows(cur) -> None:
+    """
+    Вывод на экран строк из таблиц
+    :param cur:
+    :return: None
+    """
     rows = cur.fetchall()
     for i in rows:
         print(i)
@@ -51,7 +72,7 @@ def get_arguments(quantity: int) -> str:
 
 def get_validation_salary(num: str) -> int:
     """
-    Если не указано поле salary вместо None возвращает 0
+    Если не указано поле salary вместо None возвращает 0 и преобразует строку в число
     :param num: str
     :return: int
     """
