@@ -1,7 +1,6 @@
 import requests
 from db_manager import DBManager
-from menu import user_menu
-from func import get_config, get_data_for_employers, get_data_for_vacancies
+from func import get_config, get_data_for_employers, get_data_for_vacancies, user_menu
 
 CONFIG_FILE = '../conf/config.ini'
 
@@ -16,7 +15,8 @@ def user_main() -> None:
     url = get_config(CONFIG_FILE, 'url')['url']
 
     db = DBManager(CONFIG_FILE)
-    db.create_database('db_hhru')
+    db_name = (input('Введите название базы данных: '))
+    db.create_database(db_name)
     db.create_table_employers()
     db.create_table_vacancies()
 
@@ -26,8 +26,8 @@ def user_main() -> None:
         response = requests.get(url, response_keys)
         data = response.json()
         for j in data['items']:
-            db.into_table(' employers', 3, get_data_for_employers(j))
-            db.into_table('vacancies', 10, get_data_for_vacancies(j))
+            db.filling_out_table(' employers', 3, get_data_for_employers(j))
+            db.filling_out_table('vacancies', 10, get_data_for_vacancies(j))
 
     while True:
         user_menu()

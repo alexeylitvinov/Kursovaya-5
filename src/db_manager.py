@@ -70,7 +70,7 @@ class DBManager:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    def into_table(self, table_name: str, columns: int, data: tuple) -> None:
+    def filling_out_table(self, table_name: str, columns: int, data: tuple) -> None:
         """
         Принимает на вход название таблицы, количество столбцов, данные и заполняет таблицу
         :param table_name: str
@@ -126,8 +126,8 @@ class DBManager:
         :return: None
         """
         try:
-            self.__cur.execute('''SELECT vacancy_id, vacancy_name, roles_name, salary_from, salary_to 
-                                FROM vacancies
+            self.__cur.execute('''SELECT vacancy_name, salary_from, employers.employer_name, url
+                                FROM vacancies INNER JOIN employers USING (vacancy_id)
                                 WHERE salary_from > (SELECT AVG (salary_from) FROM vacancies)
                                 ORDER BY salary_from;''')
         except (Exception, psycopg2.DatabaseError) as error:
@@ -136,7 +136,7 @@ class DBManager:
 
     def get_avg_salary(self) -> None:
         """
-        Получает среднюю зарплату по вакансиям
+        Получает среднюю зарплату по вакансиям из колонки salary_from
         :return: None
         """
         try:
